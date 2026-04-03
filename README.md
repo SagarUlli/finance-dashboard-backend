@@ -34,6 +34,7 @@ Controller → Service → Repository → Database
 * Role-based access control implemented in service layer
 * Clean separation of concerns for maintainability
 * Query-based filtering for flexible data retrieval
+* **Database Portability:** Replaced MySQL-specific `DATE_FORMAT` with database-agnostic logic using `YEAR()` and `MONTH()` to ensure compatibility with H2 and other SQL systems.
 
 ---
 
@@ -42,7 +43,7 @@ Controller → Service → Repository → Database
 | Role    | Permissions                                |
 | ------- | ------------------------------------------ |
 | VIEWER  | View dashboard only                        |
-| ANALYST | View transactions + dashboard              |
+| ANALYST | View transactions + dashboard               |
 | ADMIN   | Full access (create, update, delete, view) |
 
 ---
@@ -62,6 +63,8 @@ cd finance-dashboard-backend
 mvn spring-boot:run
 ```
 
+**Note:** On startup, a `DataInitializer` class automatically seeds default users (ADMIN and ANALYST) so the system is immediately usable.
+
 ### 3. Access H2 Console (Optional)
 
 ```
@@ -72,7 +75,7 @@ http://localhost:8080/h2-console
 
 ## 🔐 Authentication Approach
 
-This project uses a simplified header-based approach for user context:
+This project uses a simplified header-based approach for user context, configured via `SecurityConfig` for easier development and testing:
 
 ```
 X-USER-ID: 1
@@ -88,62 +91,35 @@ This was chosen to focus on backend logic instead of authentication complexity.
 ### 🔹 Transactions
 
 #### Create Transaction (ADMIN)
-
-```
-POST /transactions
-```
+`POST /transactions`
 
 #### Get Transactions (ANALYST, ADMIN)
-
-```
-GET /transactions
-```
+`GET /transactions`
 
 #### Filter Transactions (Pagination Supported)
-
-```
-GET /transactions/filter?page=0&size=10&type=EXPENSE
-```
+`GET /transactions/filter?page=0&size=10&type=EXPENSE`
 
 #### Update Transaction (ADMIN)
-
-```
-PUT /transactions/{id}
-```
+`PUT /transactions/{id}`
 
 #### Delete Transaction (ADMIN)
-
-```
-DELETE /transactions/{id}
-```
+`DELETE /transactions/{id}`
 
 ---
 
 ### 🔹 Dashboard
 
 #### Summary
-
-```
-GET /dashboard/summary
-```
+`GET /dashboard/summary`
 
 #### Category-wise Breakdown
-
-```
-GET /dashboard/category-wise
-```
+`GET /dashboard/category-wise`
 
 #### Monthly Trends
-
-```
-GET /dashboard/trends
-```
+`GET /dashboard/trends`
 
 #### Recent Transactions
-
-```
-GET /dashboard/recent
-```
+`GET /dashboard/recent`
 
 ---
 
@@ -156,6 +132,8 @@ GET /dashboard/recent
 * ✅ Input validation
 * ✅ Global exception handling
 * ✅ Clean layered architecture
+* ✅ **User Data Initialization:** Automated seeding of default roles.
+* ✅ **H2 Compatibility:** Optimized SQL logic for monthly trends.
 
 ---
 
@@ -188,13 +166,4 @@ GET /dashboard/recent
 
 ## 📌 Conclusion
 
-This project focuses on demonstrating backend engineering fundamentals:
-
-* Clean architecture
-* Proper data handling
-* Role-based logic
-* Maintainable and readable code
-
-The implementation prioritizes clarity and correctness over unnecessary complexity, aligning with real-world backend development practices.
-
----
+This project focuses on demonstrating backend engineering fundamentals: clean architecture, proper data handling, and role-based logic. Recent updates have streamlined the startup process and ensured the dashboard analytics are fully functional in an H2 environment.
