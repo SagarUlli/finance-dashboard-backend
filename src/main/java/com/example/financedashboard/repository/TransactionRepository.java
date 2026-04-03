@@ -33,15 +33,15 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 	List<Object[]> categoryWise(@Param("userId") Long userId);
 
 	@Query("""
-			    SELECT FUNCTION('DATE_FORMAT', t.date, '%Y-%m'),
+			    SELECT YEAR(t.date), MONTH(t.date),
 			           SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END),
 			           SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END)
 			    FROM Transaction t
 			    WHERE t.user.id = :userId
-			    GROUP BY FUNCTION('DATE_FORMAT', t.date, '%Y-%m')
-			    ORDER BY FUNCTION('DATE_FORMAT', t.date, '%Y-%m')
+			    GROUP BY YEAR(t.date), MONTH(t.date)
+			    ORDER BY YEAR(t.date), MONTH(t.date)
 			""")
-	List<Object[]> monthlyTrends(@Param("userId") Long userId);
+	List<Object[]> monthlyTrends(@Param("userId") Long userId);	
 
 	@Query("""
 			    SELECT t FROM Transaction t
