@@ -42,8 +42,8 @@ Controller → Service → Repository → Database
 
 | Role    | Permissions                                |
 | ------- | ------------------------------------------ |
-| VIEWER  | View dashboard only                        |
-| ANALYST | View transactions + dashboard               |
+| VIEWER  | View dashboard data only                   |
+| ANALYST | View transactions + dashboard              |
 | ADMIN   | Full access (create, update, delete, view) |
 
 ---
@@ -65,6 +65,15 @@ mvn spring-boot:run
 
 **Note:** On startup, a `DataInitializer` class automatically seeds default users (ADMIN and ANALYST) so the system is immediately usable.
 
+### Default Users
+
+The application initializes default users on startup:
+
+| Role    | Email             |
+|--------|------------------|
+| ADMIN  | admin@test.com   |
+| ANALYST| analyst@test.com |
+
 ### 3. Access H2 Console (Optional)
 
 ```
@@ -72,6 +81,12 @@ http://localhost:8080/h2-console
 ```
 
 ---
+
+### 📄 API Documentation
+
+Swagger UI is available at:
+
+http://localhost:8080/swagger-ui.html
 
 ## 🔐 Authentication Approach
 
@@ -87,6 +102,15 @@ This was chosen to focus on backend logic instead of authentication complexity.
 ---
 
 ## 📡 API Endpoints
+
+### 🔹 User Management (ADMIN)
+
+- POST /users → Create user  
+- GET /users → Get all users  
+- GET /users/{id} → Get user by ID  
+- PUT /users/{id} → Update user  
+- DELETE /users/{id} → Delete user  
+- PATCH /users/{id}/toggle-active → Activate/Deactivate user  
 
 ### 🔹 Transactions
 
@@ -128,6 +152,7 @@ This was chosen to focus on backend logic instead of authentication complexity.
 * ✅ Transaction CRUD operations
 * ✅ Filtering & pagination
 * ✅ Role-based access control
+* ✅ User management with role assignment
 * ✅ Dashboard analytics (summary, trends, category-wise)
 * ✅ Input validation
 * ✅ Global exception handling
