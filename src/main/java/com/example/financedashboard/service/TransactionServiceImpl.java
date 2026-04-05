@@ -1,5 +1,6 @@
 package com.example.financedashboard.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -38,7 +39,8 @@ public class TransactionServiceImpl implements TransactionService {
 		User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
 		Transaction transaction = Transaction.builder().amount(request.getAmount()).type(request.getType())
-				.category(request.getCategory()).date(request.getDate()).notes(request.getNotes()).user(user).build();
+				.category(request.getCategory()).date(request.getDate() != null ? request.getDate() : LocalDate.now())
+				.notes(request.getNotes()).user(user).build();
 
 		transaction = transactionRepository.save(transaction);
 
@@ -74,7 +76,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Page<TransactionResponseDTO> filterTransactions(TransactionFilterDTO filter, Long userId, Role role,
 			int page, int size) {
-
+		filter = (filter != null) ? filter : new TransactionFilterDTO();
 		Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
 
 		Long filterUserId = (role == Role.ADMIN) ? null : userId;

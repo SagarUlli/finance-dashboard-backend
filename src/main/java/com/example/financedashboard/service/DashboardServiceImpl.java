@@ -55,8 +55,9 @@ public class DashboardServiceImpl implements DashboardService {
 		validateAccess(role);
 
 		return repo.monthlyTrends(userId).stream()
-				.map(obj -> new TrendResponseDTO((String) obj[0], (BigDecimal) obj[1], (BigDecimal) obj[2])).toList();
-	}
+				.map(obj -> new TrendResponseDTO(obj[0] + "-" + obj[1], (BigDecimal) obj[2], (BigDecimal) obj[3]))
+				.toList();
+	}	
 
 	@Override
 	public List<RecentTransactionDTO> getRecentTransactions(Long userId, Role role) {
